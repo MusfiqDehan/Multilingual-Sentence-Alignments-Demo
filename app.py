@@ -2,25 +2,33 @@ import gradio as gr
 from gradio_rich_textbox import RichTextbox
 
 from helper.text_preprocess import space_punc
-from helper.alignment_mappers import select_model
-from helper.pos_taggers import select_pos_tagger
-from helper.translators import select_translator
+from helper.alignment_mappers import select_model, get_alignments_table
+from helper.translators import select_target_lang_code, google_translation
 
 
-def bn_postagger(src, translator, model_name, tagger):
+def process_alignments(src, language_name, model_name):
     """
     Bangla PoS Tagger
     """
+
+    tgt = None
+    html_table = None
     
     src = space_punc(src)
 
-    tgt_base, tgt = select_translator(src, translator)
+    tgt = select_target_lang_code(language_name)
+
+    tgt = google_translation(src, tgt)
 
     model_name = select_model(model_name)
 
-    result, pos_accuracy = select_pos_tagger(src, tgt, model_name, tagger)
+    html_table, alignment_accuracy = get_alignments_table(
+        source=src,
+        target=tgt,
+        model_name=model_name 
+    )
 
-    return tgt_base, result, pos_accuracy
+    return tgt, html_table, alignment_accuracy
     
 
 with gr.Blocks(css="styles.css") as demo:
@@ -31,20 +39,121 @@ with gr.Blocks(css="styles.css") as demo:
         with gr.Column():
             inputs = [
                 gr.Textbox(
-                    label="Enter Bangla Sentence", 
-                    placeholder="বাংলা বাক্য লিখুন"
+                    label="Enter a Sentence (Auto Detect Language)", 
                 ),
                 gr.Dropdown(
-                    choices=["Google", "BanglaNMT", "MyMemory"], 
-                    label="Select a Translator"
+                    choices=
+                    [
+                        "Afrikaans",
+                        "Albanian",
+                        "Arabic",
+                        "Aragonese",
+                        "Armenian",
+                        "Asturian",
+                        "Azerbaijani",
+                        "Bashkir",
+                        "Basque",
+                        "Bavarian",
+                        "Belarusian",
+                        "Bengali",
+                        "Bishnupriya Manipuri",
+                        "Bosnian",
+                        "Breton",
+                        "Bulgarian",
+                        "Burmese",
+                        "Catalan",
+                        "Cebuano",
+                        "Chechen",
+                        "Chinese (Simplified)",
+                        "Chinese (Traditional)",
+                        "Chuvash",
+                        "Croatian",
+                        "Czech",
+                        "Danish",
+                        "Dutch",
+                        "English",
+                        "Estonian",
+                        "Finnish",
+                        "French",
+                        "Galician",
+                        "Georgian",
+                        "German",
+                        "Greek",
+                        "Gujarati",
+                        "Haitian",
+                        "Hebrew",
+                        "Hindi",
+                        "Hungarian",
+                        "Icelandic",
+                        "Ido",
+                        "Indonesian",
+                        "Irish",
+                        "Italian",
+                        "Japanese",
+                        "Javanese",
+                        "Kannada",
+                        "Kazakh",
+                        "Kirghiz",
+                        "Korean",
+                        "Latin",
+                        "Latvian",
+                        "Lithuanian",
+                        "Lombard",
+                        "Low Saxon",
+                        "Luxembourgish",
+                        "Macedonian",
+                        "Malagasy",
+                        "Malay",
+                        "Malayalam",
+                        "Marathi",
+                        "Minangkabau",
+                        "Nepali",
+                        "Newar",
+                        "Norwegian (Bokmal)",
+                        "Norwegian (Nynorsk)",
+                        "Occitan",
+                        "Persian (Farsi)",
+                        "Piedmontese",
+                        "Polish",
+                        "Portuguese",
+                        "Punjabi",
+                        "Romanian",
+                        "Russian",
+                        "Scots",
+                        "Serbian",
+                        "Serbo-Croatian",
+                        "Sicilian",
+                        "Slovak",
+                        "Slovenian",
+                        "South Azerbaijani",
+                        "Spanish",
+                        "Sundanese",
+                        "Swahili",
+                        "Swedish",
+                        "Tagalog",
+                        "Tajik",
+                        "Tamil",
+                        "Tatar",
+                        "Telugu",
+                        "Turkish",
+                        "Ukrainian",
+                        "Urdu",
+                        "Uzbek",
+                        "Vietnamese",
+                        "Volapük",
+                        "Waray-Waray",
+                        "Welsh",
+                        "West Frisian",
+                        "Western Punjabi",
+                        "Yoruba",
+                        "Thai",
+                        "Mongolian"
+                    ], 
+                    label="Select Target Language"
                 ),
                 gr.Dropdown(
                     choices=["Google-mBERT (Base-Multilingual)", "Neulab-AwesomeAlign (Bn-En-0.5M)", "BUET-BanglaBERT (Large)", "SagorSarker-BanglaBERT (Base)", "SentenceTransformers-LaBSE (Multilingual)"], 
                     label="Select a Model"
-                ),
-                gr.Dropdown(
-                    choices=["spaCy", "NLTK", "Flair", "TextBlob"], 
-                    label="Select a PoS Tagger"
                 )
             ]
 
@@ -54,54 +163,27 @@ with gr.Blocks(css="styles.css") as demo:
         with gr.Column():
             outputs = [
                 gr.Textbox(label="English Translation"), 
-                RichTextbox(label="PoS Tags"),
-                gr.Textbox(label="PoS Tagging Accuracy (Based on Unknown(UNK) Tags)")
+                RichTextbox(label="Alignments Mapping (Source to Target)"),
+                gr.Textbox(label="Alignment Accuracy (Based on Unknown(UNK) Tags)")
             ]
 
-    btn.click(bn_postagger, inputs, outputs)
+    btn.click(process_alignments, inputs, outputs)
 
     gr.Examples([
         [
             "বাংলাদেশ দক্ষিণ এশিয়ার একটি সার্বভৌম রাষ্ট্র।", 
-            "Google", 
-            "Neulab-AwesomeAlign (Bn-En-0.5M)", 
-            "NLTK"
+            "English", 
+            "SentenceTransformers-LaBSE (Multilingual)", 
         ],
         [
             "বাংলাদেশের সংবিধানিক নাম কি?", 
-            "Google", 
+            "English", 
             "Google-mBERT (Base-Multilingual)",
-            "spaCy"
         ],
         [
             "বাংলাদেশের সাংবিধানিক নাম গণপ্রজাতন্ত্রী বাংলাদেশ।", 
-            "Google", 
+            "Hindi", 
             "Google-mBERT (Base-Multilingual)",
-            "TextBlob"
-        ],
-        [
-            "তিনজনের কেউই বাবার পথ ধরে প্রযুক্তি দুনিয়ায় হাঁটেননি।", 
-            "Google", 
-            "Neulab-AwesomeAlign (Bn-En-0.5M)", 
-            "spaCy"
-        ],
-        [
-            "তিনজনের কেউই বাবার পথ ধরে প্রযুক্তি দুনিয়ায় হাঁটেননি।", 
-            "BanglaNMT",
-            "Google-mBERT (Base-Multilingual)", 
-            "spaCy"
-        ],
-        [
-            "তিনজনের কেউই বাবার পথ ধরে প্রযুক্তি দুনিয়ায় হাঁটেননি।", 
-            "MyMemory",
-            "Google-mBERT (Base-Multilingual)", 
-            "spaCy"
-        ],
-        [
-            "বিশ্বের আরও একটি সেরা ক্লাব।", 
-            "Google", 
-            "Neulab-AwesomeAlign (Bn-En-0.5M)", 
-            "Flair"
         ]
 
     ], inputs)
