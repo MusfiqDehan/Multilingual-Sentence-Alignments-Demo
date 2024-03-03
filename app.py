@@ -39,7 +39,7 @@ def process_alignments(src, language_name, model_name):
 with gr.Blocks(css="styles.css") as demo:
     gr.HTML("<h1>Multilingual Sentence Alignments</h1>")
     gr.HTML("<p>Align Parallel Sentences using mBERT</p>")
-    gr.HTML("<a href='https://github.com/google-research/bert/blob/master/multilingual.md#list-of-languages' alt='mBERT Repo'>Support Alignments Between 104 Languages</a>")
+    gr.HTML("<a href='https://github.com/google-research/bert/blob/master/multilingual.md#list-of-languages' alt='mBERT Repo'>(Support Sentence Alignments Between 104 Languages)</a>")
 
     with gr.Row():
         with gr.Column():
@@ -158,7 +158,9 @@ with gr.Blocks(css="styles.css") as demo:
                     label="Select Target Language"
                 ),
                 gr.Dropdown(
-                    choices=["Google-mBERT (Base-Multilingual)", "Neulab-AwesomeAlign (Bn-En-0.5M)", "BUET-BanglaBERT (Large)", "SagorSarker-BanglaBERT (Base)", "SentenceTransformers-LaBSE (Multilingual)"], 
+                    choices=[
+                        "Google-mBERT (Base-Multilingual)", "SentenceTransformers-LaBSE (Multilingual)"
+                    ], 
                     label="Select a Model"
                 )
             ]
