@@ -1,0 +1,11 @@
+torch
+sentencepiece
+transformers
+spacy
+flair
+nltk
+textblob
+deep-translator
+pandas
+gradio_rich_textbox
+python-dotenv
