@@ -192,7 +192,12 @@ with gr.Blocks(css="styles.css") as demo:
             "বাংলাদেশের সাংবিধানিক নাম গণপ্রজাতন্ত্রী বাংলাদেশ।", 
             "Hindi", 
             "Google-mBERT (Base-Multilingual)",
-        ]
+        ],
+        [
+            "বাংলাদেশের সংবিধানিক নাম কি?", 
+            "Punjabi", 
+            "Google-mBERT (Base-Multilingual)",
+        ],
 
     ], inputs)
 
