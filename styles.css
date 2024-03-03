@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap");
+
+h1 {
+    font-family: "Merriweather", serif;
+    text-align: center;
+    font-weight: 700;
+}
+
+p {
+    text-align: center;
+}
+
+.mybtn {
+    background-color: rgb(240,98,16)!important;
+}
+
+table {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    padding: 5px;
+}
