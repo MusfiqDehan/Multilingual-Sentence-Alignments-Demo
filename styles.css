@@ -10,8 +10,12 @@ p {
     text-align: center;
 }
 
+a {
+    text-decoration: none;
+}
+
 .mybtn {
-    background-color: rgb(240,98,16)!important;
+    background-color: rgb(240, 98, 16) !important;
 }
 
 table {
