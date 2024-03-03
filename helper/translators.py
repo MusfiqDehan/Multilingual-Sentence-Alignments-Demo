@@ -36,21 +36,19 @@ def get_translated_digit(sentence):
 
     return "".join(each for each in translated_sentence)
 
-def google_translation(sentence: str, source="auto", target="") -> str:
+def google_translation(sentence, tgt_lang_code):
     """
     Translate a sentence from one language to another using Google Translator.\n
     At first install dependencies \n
     `!pip install -U deep-translator`
     """
-    translator = GoogleTranslator()
-    translated_sentence = translator.translate(
-        sentence, source=source, target=target)
-    return translated_sentence
+    translated = GoogleTranslator(source='auto', target=tgt_lang_code).translate(sentence)
+    return translated
 
 
-def get_better_translation(src=""):
+def get_better_translation(src, tgt_lang_code):
     src_mod = get_translated_digit(src)
-    tgt = google_translation(src_mod)
+    tgt = google_translation(src_mod, tgt_lang_code)
     tgt = decontracting_words(tgt)
     tgt = tgt.replace('rupees', 'takas').replace('Rs', 'takas')
     return tgt
