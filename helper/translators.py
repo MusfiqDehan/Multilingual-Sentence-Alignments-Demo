@@ -4,17 +4,7 @@ This file contains the functions to translate the text from one language to anot
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from deep_translator import GoogleTranslator, MyMemoryTranslator, MicrosoftTranslator, YandexTranslator, ChatGptTranslator
 from .text_preprocess import decontracting_words, space_punc
-from dotenv import load_dotenv
-import os
 
-
-# Load the environment variables from the .env file
-load_dotenv()
-
-# Translators API Keys
-MICROSOFT_API_KEY = os.getenv("MICROSOFT_TRANSLATOR_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
 
 # Digit Translation
 digit_converter = {
@@ -46,20 +36,7 @@ def get_translated_digit(sentence):
 
     return "".join(each for each in translated_sentence)
 
-# Bangla to English Translation (BUET BanglaNMT)
-translation_model_bn_en = AutoModelForSeq2SeqLM.from_pretrained("csebuetnlp/banglat5_nmt_bn_en")
-translation_tokenizer_bn_en = AutoTokenizer.from_pretrained("csebuetnlp/banglat5_nmt_bn_en")
-
-def banglanmt_translation(input_text):
-    """
-    Translate a sentence from Bengali to English using BUET BanglaNMT
-    """
-    inputs = translation_tokenizer_bn_en(input_text, return_tensors="pt")
-    outputs = translation_model_bn_en.generate(**inputs)
-    translated_text = translation_tokenizer_bn_en.decode(outputs[0], skip_special_tokens=True)
-    return translated_text
-
-def google_translation(sentence: str, source="bn", target="en") -> str:
+def google_translation(sentence: str, source="auto", target="en") -> str:
     """
     Translate a sentence from one language to another using Google Translator.\n
     At first install dependencies \n
@@ -70,46 +47,6 @@ def google_translation(sentence: str, source="bn", target="en") -> str:
         sentence, source=source, target=target)
     return translated_sentence
 
-def microsoft_translation(sentence: str, source="bn", target="en") -> str:
-    """
-    Translate a sentence from one language to another using Microsoft Translator.\n
-    At first install dependencies \n
-    `!pip install -U deep-translator`
-    """
-    translator = MicrosoftTranslator(api_key=MICROSOFT_API_KEY, target='en')
-    translated_sentence = translator.translate(sentence)
-    return translated_sentence
-
-def chatgpt_translation(sentence: str, source="bn", target="en") -> str:
-    """
-    Translate a sentence from one language to another using ChatGPT Translator.\n
-    At first install dependencies \n
-    `!pip install -U deep-translator`
-    """
-    translator = ChatGptTranslator(api_key=OPENAI_API_KEY, target=target)
-    translated_sentence = translator.translate(sentence)
-    return translated_sentence
-
-def yandex_translation(sentence: str, source="bn", target="en") -> str:
-    """
-    Translate a sentence from one language to another using Yandex Translator.\n
-    At first install dependencies \n
-    `!pip install -U deep-translator`
-    """
-    translator = YandexTranslator(api_key=YANDEX_API_KEY)
-    translated_sentence = translator.translate(
-        sentence, source=source, target=target)
-    return translated_sentence
-
-def mymemory_translation(sentence: str, source="bn-IN", target="en-US") -> str:
-    """
-    Translate a sentence from one language to another using MyMemory Translator.\n
-    At first install dependencies \n
-    `!pip install -U deep-translator`
-    """
-    translator = MyMemoryTranslator(source=source, target=target)
-    translated_sentence = translator.translate(sentence)
-    return translated_sentence
 
 def get_better_translation(translator_func, src=""):
     src_mod = get_translated_digit(src)
@@ -118,24 +55,242 @@ def get_better_translation(translator_func, src=""):
     tgt = tgt.replace('rupees', 'takas').replace('Rs', 'takas')
     return tgt
 
-def select_translator(src, translator):
-    """
-    Select the translator
-    """
-    tgt = None
-    tgt_base = None
+# def select_translator(src, translator):
+#     """
+#     Select the translator
+#     """
+#     tgt = None
+#     tgt_base = None
 
-    if translator == "Google":
-        tgt = get_better_translation(google_translation, src)
-        tgt = space_punc(tgt)
-        tgt_base = google_translation(src)
-    elif translator == "BanglaNMT":
-        tgt = get_better_translation(banglanmt_translation, src)
-        tgt = space_punc(tgt)
-        tgt_base = banglanmt_translation(src)
-    elif translator == "MyMemory":
-        tgt = get_better_translation(mymemory_translation, src)
-        tgt = space_punc(tgt)
-        tgt_base = mymemory_translation(src)
+#     if translator == "Google":
+#         tgt = get_better_translation(google_translation, src)
+#         tgt = space_punc(tgt)
+#         tgt_base = google_translation(src)
+#     elif translator == "BanglaNMT":
+#         tgt = get_better_translation(banglanmt_translation, src)
+#         tgt = space_punc(tgt)
+#         tgt_base = banglanmt_translation(src)
+#     elif translator == "MyMemory":
+#         tgt = get_better_translation(mymemory_translation, src)
+#         tgt = space_punc(tgt)
+#         tgt_base = mymemory_translation(src)
     
-    return tgt_base, tgt
+#     return tgt_base, tgt
+
+# Afrikaans
+# Albanian
+# Arabic
+# Aragonese
+# Armenian
+# Asturian
+# Azerbaijani
+# Bashkir
+# Basque
+# Bavarian
+# Belarusian
+# Bengali
+# Bishnupriya Manipuri
+# Bosnian
+# Breton
+# Bulgarian
+# Burmese
+# Catalan
+# Cebuano
+# Chechen
+# Chinese (Simplified)
+# Chinese (Traditional)
+# Chuvash
+# Croatian
+# Czech
+# Danish
+# Dutch
+# English
+# Estonian
+# Finnish
+# French
+# Galician
+# Georgian
+# German
+# Greek
+# Gujarati
+# Haitian
+# Hebrew
+# Hindi
+# Hungarian
+# Icelandic
+# Ido
+# Indonesian
+# Irish
+# Italian
+# Japanese
+# Javanese
+# Kannada
+# Kazakh
+# Kirghiz
+# Korean
+# Latin
+# Latvian
+# Lithuanian
+# Lombard
+# Low Saxon
+# Luxembourgish
+# Macedonian
+# Malagasy
+# Malay
+# Malayalam
+# Marathi
+# Minangkabau
+# Nepali
+# Newar
+# Norwegian (Bokmal)
+# Norwegian (Nynorsk)
+# Occitan
+# Persian (Farsi)
+# Piedmontese
+# Polish
+# Portuguese
+# Punjabi
+# Romanian
+# Russian
+# Scots
+# Serbian
+# Serbo-Croatian
+# Sicilian
+# Slovak
+# Slovenian
+# South Azerbaijani
+# Spanish
+# Sundanese
+# Swahili
+# Swedish
+# Tagalog
+# Tajik
+# Tamil
+# Tatar
+# Telugu
+# Turkish
+# Ukrainian
+# Urdu
+# Uzbek
+# Vietnamese
+# Volapük
+# Waray-Waray
+# Welsh
+# West Frisian
+# Western Punjabi
+# Yoruba
+# Thai
+# Mongolian
+
+target_lang_dict = {
+    "Afrikaans": "af",
+    "Albanian": "sq",
+    "Arabic": "ar",
+    "Aragonese": "an",
+    "Armenian": "hy",
+    "Asturian": "ast",
+    "Azerbaijani": "az",
+    "Bashkir": "ba",
+    "Basque": "eu",
+    "Bavarian": "bar",
+    "Belarusian": "be",
+    "Bengali": "bn",
+    "Bishnupriya Manipuri": "bpy",
+    "Bosnian": "bs",
+    "Breton": "br",
+    "Bulgarian": "bg",
+    "Burmese": "my",
+    "Catalan": "ca",
+    "Cebuano": "ceb",
+    "Chechen": "ce",
+    "Chinese (Simplified)": "zh",
+    "Chinese (Traditional)": "zh-tw",
+    "Chuvash": "cv",
+    "Croatian": "hr",
+    "Czech": "cs",
+    "Danish": "da",
+    "Dutch": "nl",
+    "English": "en",
+    "Estonian": "et",
+    "Finnish": "fi",
+    "French": "fr",
+    "Galician": "gl",
+    "Georgian": "ka",
+    "German": "de",
+    "Greek": "el",
+    "Gujarati": "gu",
+    "Haitian": "ht",
+    "Hebrew": "he",
+    "Hindi": "hi",
+    "Hungarian": "hu",
+    "Icelandic": "is",
+    "Ido": "io",
+    "Indonesian": "id",
+    "Irish": "ga",
+    "Italian": "it",
+    "Japanese": "ja",
+    "Javanese": "jv",
+    "Kannada": "kn",
+    "Kazakh": "kk",
+    "Kirghiz": "ky",
+    "Korean": "ko",
+    "Latin": "la",
+    "Latvian": "lv",
+    "Lithuanian": "lt",
+    "Lombard": "lmo",
+    "Low Saxon": "nds",
+    "Luxembourgish": "lb",
+    "Macedonian": "mk",
+    "Malagasy": "mg",
+    "Malay": "ms",
+    "Malayalam": "ml",
+    "Marathi": "mr",
+    "Minangkabau": "min",
+    "Nepali": "ne",
+    "Newar": "new",
+    "Norwegian (Bokmal)": "nb",
+    "Norwegian (Nynorsk)": "nn",
+    "Occitan": "oc",
+    "Persian (Farsi)": "fa",
+    "Piedmontese": "pms",
+    "Polish": "pl",
+    "Portuguese": "pt",
+    "Punjabi": "pa",
+    "Romanian": "ro",
+    "Russian": "ru",
+    "Scots": "sco",
+    "Serbian": "sr",
+    "Serbo-Croatian": "sh",
+    "Sicilian": "scn",
+    "Slovak": "sk",
+    "Slovenian": "sl",
+    "South Azerbaijani": "azb",
+    "Spanish": "es",
+    "Sundanese": "su",
+    "Swahili": "sw",
+    "Swedish": "sv",
+    "Tagalog": "tl",
+    "Tajik": "tg",
+    "Tamil": "ta",
+    "Tatar": "tt",
+    "Telugu": "te",
+    "Turkish": "tr",
+    "Ukrainian": "uk",
+    "Urdu": "ur",
+    "Uzbek": "uz",
+    "Vietnamese": "vi",
+    "Volapük": "vo",
+    "Waray-Waray": "war",
+    "Welsh": "cy",
+    "West Frisian": "fy",
+    "Western Punjabi": "pnb",
+    "Yoruba": "yo",
+    "Thai": "th",
+    "Mongolian": "mn"
+}
+
+def select_target_lang_code(lang):
+    """
+    Select the target language code
+    """
+    return target_lang_dict[lang] if lang in target_lang_dict else "en"
