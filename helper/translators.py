@@ -36,7 +36,7 @@ def get_translated_digit(sentence):
 
     return "".join(each for each in translated_sentence)
 
-def google_translation(sentence: str, source="auto", target="en") -> str:
+def google_translation(sentence: str, source="auto", target="") -> str:
     """
     Translate a sentence from one language to another using Google Translator.\n
     At first install dependencies \n
