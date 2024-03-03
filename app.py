@@ -17,13 +17,13 @@ def process_alignments(src, language_name, model_name):
     
     src = space_punc(src)
 
-    tgt = select_target_lang_code(language_name)
+    tgt_lang_code = select_target_lang_code(language_name)
 
-    tgt = get_better_translation(src)
+    tgt = get_better_translation(src, tgt_lang_code)
 
     tgt = space_punc(tgt)
 
-    tgt_base = google_translation(src, tgt)
+    tgt_base = google_translation(src, tgt_lang_code)
 
     model_name = select_model(model_name)
 
