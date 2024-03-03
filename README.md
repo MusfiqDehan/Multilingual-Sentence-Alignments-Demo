@@ -1,6 +1,6 @@
 ---
 title: Multilingual Sentence Alignments
-tags: ["sentence-alignments", "word-alignments," "multilingual", "alignment"]
+tags: ["sentence-alignments", "word-alignments", "multilingual", "alignment"]
 short_description: Support Sentence Alignments Between 104 Languages
 emoji: 🇺🇸🌐🇮🇳
 colorFrom: blue
