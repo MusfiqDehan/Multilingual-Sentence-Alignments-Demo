@@ -2,7 +2,7 @@
 title: Multilingual Sentence Alignments
 emoji: 🇺🇸🌐🇮🇳
 colorFrom: blue
-colorTo: black
+colorTo: indigo
 sdk: gradio
 sdk_version: 4.19.2
 app_file: app.py
