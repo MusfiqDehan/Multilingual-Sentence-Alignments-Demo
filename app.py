@@ -3,7 +3,7 @@ from gradio_rich_textbox import RichTextbox
 
 from helper.text_preprocess import space_punc
 from helper.alignment_mappers import select_model, get_alignments_table
-from helper.translators import select_target_lang_code, google_translation
+from helper.translators import select_target_lang_code, google_translation, get_better_translation
 
 
 def process_alignments(src, language_name, model_name):
@@ -12,13 +12,18 @@ def process_alignments(src, language_name, model_name):
     """
 
     tgt = None
+    tgt_base = None
     html_table = None
     
     src = space_punc(src)
 
     tgt = select_target_lang_code(language_name)
 
-    tgt = google_translation(src, tgt)
+    tgt = get_better_translation(src)
+
+    tgt = space_punc(tgt)
+
+    tgt_base = google_translation(src, tgt)
 
     model_name = select_model(model_name)
 
@@ -28,12 +33,12 @@ def process_alignments(src, language_name, model_name):
         model_name=model_name 
     )
 
-    return tgt, html_table, alignment_accuracy
+    return tgt_base, html_table, alignment_accuracy
     
 
 with gr.Blocks(css="styles.css") as demo:
-    gr.HTML("<h1>Bangla PoS Taggers</h1>")
-    gr.HTML("<p>Parts of Speech (PoS) Tagging of Bangla Sentence using Bangla-English <strong>Word Alignment</strong></p>")
+    gr.HTML("<h1>Multilingual Sentence Alignments</h1>")
+    gr.HTML("<p>Align Parallel Sentences using mBERT</p>")
 
     with gr.Row():
         with gr.Column():
@@ -164,7 +169,7 @@ with gr.Blocks(css="styles.css") as demo:
             outputs = [
                 gr.Textbox(label="English Translation"), 
                 RichTextbox(label="Alignments Mapping (Source to Target)"),
-                gr.Textbox(label="Alignment Accuracy (Based on Unknown(UNK) Tags)")
+                gr.Textbox(label="Alignment Accuracy")
             ]
 
     btn.click(process_alignments, inputs, outputs)
