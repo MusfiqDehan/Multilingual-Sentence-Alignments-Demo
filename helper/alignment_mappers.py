@@ -122,4 +122,64 @@ def get_word_index_mapping(source="", target="", model_name=""):
     return result
 
 
+def get_alignments_table(
+        source="", 
+        target="", 
+        model_name=""):
+    """Get Spacy PoS Tags and return a Markdown table"""
 
+    sent_src, sent_tgt, align_words = get_alignment_mapping(
+        source=source, target=target, model_name=model_name
+    )
+
+    mapped_sent_src = []
+
+    html_table = '''
+                    <table>
+                        <thead>
+                            <th>Source</th>
+                            <th>Target</th>
+                        </thead>
+                '''
+
+    for i, j in sorted(align_words):
+        punc = r"""!()-[]{}।;:'"\,<>./?@#$%^&*_~"""
+        if sent_src[i] in punc or sent_tgt[j] in punc:
+            mapped_sent_src.append(sent_src[i])
+
+            html_table += f'''
+                            <tbody>
+                                <tr>
+                                    <td> {sent_src[i]} </td>
+                                    <td> {sent_tgt[j]} </td>
+                                </tr>
+                            '''
+        else:
+            mapped_sent_src.append(sent_src[i])
+
+            html_table += f'''
+                            <tr>
+                                <td> {sent_src[i]} </td>
+                                <td> {sent_tgt[j]} </td>
+                            </tr>
+                            '''
+
+    unks = list(set(sent_src).difference(set(mapped_sent_src)))
+    for word in unks:
+
+        html_table += f'''
+                        <tr>
+                            <td> {word} </td>
+                            <td> N/A </td>
+                        </tr>                         
+                    '''
+        
+    html_table += '''
+                        </tbody>
+                    </table>
+                '''
+    
+    pos_accuracy = ((len(sent_src) - len(unks)) / len(sent_src))
+    pos_accuracy = f"{pos_accuracy:0.2%}"
+
+    return html_table, pos_accuracy
