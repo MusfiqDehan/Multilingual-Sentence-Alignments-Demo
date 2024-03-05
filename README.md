@@ -2,7 +2,7 @@
 title: Multilingual Sentence Alignments
 tags: ["sentence-alignments", "word-alignments", "multilingual", "alignment"]
 short_description: Support Sentence Alignments Between 104 Languages
-emoji: 🇺🇸🌐🇮🇳
+emoji: 🌐
 colorFrom: blue
 colorTo: red
 sdk: gradio
@@ -12,4 +12,4 @@ pinned: false
 license: mit
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+# Multilingual Sentence Alignments
