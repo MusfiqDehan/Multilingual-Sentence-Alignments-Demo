@@ -33,3 +33,7 @@ td {
     border-collapse: collapse;
     padding: 5px;
 }
+
+footer {
+    visibility: hidden;
+}
